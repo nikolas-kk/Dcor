@@ -1,4 +1,5 @@
 1+1
 2+2
 
-33 
+print("Hellow github")
+print("Niko an to blepeis ta katafera")
