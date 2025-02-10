@@ -17,11 +17,11 @@ mix_norm <- function(size) {
   sigma1 <- Rfast2::Runif(1, 0, 50)
   mu2 <- Rfast2::Runif(1, -50, 50)
   sigma2 <- Rfast2::Runif(1, 0, 50)
-  for (i in 1:size) {
-    y[i] <- p * Rfast::Rnorm(1, mu1, sigma1) + (1 - p) * Rfast::Rnorm(1, mu2, sigma2)
-  }
-  return(y)
+  v1 <- Rfast::Rnorm(size, mu1, sigma1)
+  v2 <- Rfast::Rnorm(size, mu2, sigma2)
+  y <- p * v1 + (1 - p) * v2
 }
+
 type1_error <- function(P, n) {
   count_perm <- 0
   count_as <- 0
@@ -41,4 +41,4 @@ type1_error <- function(P, n) {
   type1 <- c("Permutation" = count_perm / P, "Asymptotic" = count_as / P)
   return(type1)
 }
-type1_error(1000,500)
+type1_error(1000, 500)
