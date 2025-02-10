@@ -1,7 +1,7 @@
 library(dcov)
 library(Rfast)
 library(Rfast2)
-library(parallel)
+library(microbenchmark)
 
 beta <- function(size) {
   a <- Rfast2::Runif(1, 1, 50)
@@ -22,32 +22,23 @@ mix_norm <- function(size) {
   }
   return(y)
 }
-
-sim_error <- function(dummy, n) {
-  x <- beta(n)
-  y <- mix_norm(n)
-  pperm <- dcor.test(x, y, R = 1000, type = 'U')$p.values
-  stat_as <- n * dcov::dcor(x, y, type = "U")^2 + 1
-  pas <- pchisq(stat_as, 1, lower.tail = FALSE)
-  c(perm = as.numeric(pperm < 0.05),
-    asym = as.numeric(pas < 0.05))
-}
-
-type1_error_parallel <- function(P, n) {
-  cl <- makeCluster(detectCores())
-  clusterEvalQ(cl, {
-    library(dcov)
-    library(Rfast)
-    library(Rfast2)
-  })
-  clusterExport(cl, varlist = c("beta", "mix_norm", "sim_error"), envir = environment())
-  res_list <- parLapply(cl, 1:P, function(i) sim_error(i, n))
-  stopCluster(cl)
-  res <- do.call(rbind, res_list)
-  type1 <- c("Permutation" = mean(res[, "perm"]),
-             "Asymptotic"  = mean(res[, "asym"]))
+type1_error <- function(P, n) {
+  count_perm <- 0
+  count_as <- 0
+  for (i in 1:P) {
+    x <- beta(n)
+    y <- mix_norm(n)
+    pperm <- dcor.test(x, y, R = 1000, type = 'U')$p.values
+    stat_as <- n * (dcov::dcor(x, y, type = "U")^2) + 1
+    pas <- pchisq(stat_as, 1, lower.tail = FALSE)
+    if (pperm < 0.05) {
+      count_perm <- count_perm + 1
+    }
+    if (pas < 0.05) {
+      count_as <- count_as + 1
+    }
+  }
+  type1 <- c("Permutation" = count_perm / P, "Asymptotic" = count_as / P)
   return(type1)
 }
-
-result <- type1_error_parallel(P = 1000, n = 100)
-microbenchmark(type1_error_parallel(P = 1000, n = 100),1,unit='seconds')
+type1_error(1000,500)
