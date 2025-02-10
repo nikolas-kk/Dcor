@@ -17,9 +17,9 @@ mix_norm <- function(size) {
   sigma1 <- Rfast2::Runif(1, 0, 50)
   mu2 <- Rfast2::Runif(1, -50, 50)
   sigma2 <- Rfast2::Runif(1, 0, 50)
-  v1 <- Rfast::Rnorm(size, mu1, sigma1)
-  v2 <- Rfast::Rnorm(size, mu2, sigma2)
-  y <- p * v1 + q * v2
+  sigma1 <- Rfast::Rnorm(size, mu1, sigma1)
+  sigma2 <- Rfast::Rnorm(size, mu2, sigma2)
+  y <- p * sigma1 + q * sigma2 # sigma1 =v1 and sigma2=v2
 }
 microbenchmark(mix_norm(1000), 100, unit = 'microseconds')
 
