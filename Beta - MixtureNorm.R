@@ -11,16 +11,17 @@ beta <- function(size) {
 }
 
 mix_norm <- function(size) {
-  y <- c()
   p <- Rfast2::Runif(1)
+  q <- 1 - p
   mu1 <- Rfast2::Runif(1, -50, 50)
   sigma1 <- Rfast2::Runif(1, 0, 50)
   mu2 <- Rfast2::Runif(1, -50, 50)
   sigma2 <- Rfast2::Runif(1, 0, 50)
   v1 <- Rfast::Rnorm(size, mu1, sigma1)
   v2 <- Rfast::Rnorm(size, mu2, sigma2)
-  y <- p * v1 + (1 - p) * v2
+  y <- p * v1 + q * v2
 }
+microbenchmark(mix_norm(1000), 100, unit = 'microseconds')
 
 type1_error <- function(P, n) {
   count_perm <- 0
