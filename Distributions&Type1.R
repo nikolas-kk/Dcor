@@ -3,7 +3,7 @@
 #                   library(MCMCpack)
 #                   library(sn)
 #                   library(dcov)
-
+#                   library(LaplacesDemon)
 ########################### For Generating X ####################################
 
 beta <- function(size) {
@@ -48,17 +48,16 @@ cauchy <- function(size) {
 
 mix_norm <- function(size) {
   #Mixture of 2 normals
-  p <- Rfast2::Runif(1)
-  q <- 1 - p
+  p1 <- Rfast2::Runif(1)
+  p<-c(p1,1-p1)
   mu1 <- Rfast2::Runif(1, -50, 50)
   v1 <- Rfast2::Runif(1, 0, 50)
   mu2 <- Rfast2::Runif(1, -50, 50)
   v2 <- Rfast2::Runif(1, 0, 50)
-  v1 <- Rfast::Rnorm(size, mu1, v1)
-  v2 <- Rfast::Rnorm(size, mu2, v2)
-  y <- p * v1 + q * v2 # sigma1 =v1 and sigma2=v2
+  m<-c(mu1,mu2)
+  s<-c(v1,v2)
+  y <- LaplacesDemon::rnormm(size,p,m,s)
 }
-
 mix_norm3 <- function(size) {
   #Mixture of 3 normals
   mu1 <- Rfast2::Runif(1, -50, 50)
