@@ -1,6 +1,5 @@
 #Required packages: library(Rfast)
 #                   library(Rfast2)
-#                   library(MCMCpack)
 #                   library(sn)
 #                   library(dcov)
 #                   library(LaplacesDemon)
@@ -50,14 +49,14 @@ cauchy  <- function(size) {
 mix_norm <- function(size) {
   #Mixture of 2 normals
   p1  <- Rfast2::Runif(1)
-  p   <- c(p1,1-p1)
+  p   <- c(p1, 1 - p1)
   mu1 <- Rfast2::Runif(1, -50, 50)
   v1  <- Rfast2::Runif(1, 0, 50)
   mu2 <- Rfast2::Runif(1, -50, 50)
   v2  <- Rfast2::Runif(1, 0, 50)
-  m   <- c(mu1,mu2)
-  s   <- c(v1,v2)
-  y   <- LaplacesDemon::rnormm(size,p,m,s)
+  m   <- c(mu1, mu2)
+  s   <- c(v1, v2)
+  y   <- LaplacesDemon::rnormm(size, p, m, s)
 }
 mix_norm3 <- function(size) {
   #Mixture of 3 normals
@@ -69,12 +68,12 @@ mix_norm3 <- function(size) {
   v3  <- Rfast2::Runif(1, 0, 50)
   m   <- c(mu1, mu2, mu3)
   s   <- c(v1, v2, v3)
-  p<-sort(Rfast2::Runif(2))
-  p1<-p[1]
-  p2<-p[2]-p[1]
-  p3<-1-p[2]
-  p<-c(p1,p2,p3)
-  p<-p/sum(p)
+  p <- sort(Rfast2::Runif(2))
+  p1 <- p[1]
+  p2 <- p[2] - p[1]
+  p3 <- 1 - p[2]
+  p <- c(p1, p2, p3)
+  p <- p / sum(p)
   y <- LaplacesDemon::rnormm(size, p, m, s)
 }
 
@@ -87,12 +86,22 @@ mix_skew_t <- function(size) {
   scale2 <- Rfast2::Runif(1, 1, 50)
   a1     <- Rfast2::Runif(1, -20, 20)
   a2     <- Rfast2::Runif(1, -20, 20)
-  p      <- c(p,q)
+  p      <- c(p, q)
   # mu = loc , sigma2 = scale , shape =  skew , nu = must be df
-  arg1   <- c(mu = loc1,sigma2 = scale1, shape  = a1 ,nu = 1) #nu = DF = 1
-  arg2   <- c(mu = loc2,sigma2 = scale2, shape  = a2 ,nu = 1)
-  arg    <- list(arg1,arg2)
-  mixsmsn::rmix(size,p,family = "Skew.t",arg, cluster = FALSE)
+  arg1   <- c(
+    mu = loc1,
+    sigma2 = scale1,
+    shape  = a1 ,
+    nu = 1
+  ) #nu = DF = 1
+  arg2   <- c(
+    mu = loc2,
+    sigma2 = scale2,
+    shape  = a2 ,
+    nu = 1
+  )
+  arg    <- list(arg1, arg2)
+  mixsmsn::rmix(size, p, family = "Skew.t", arg, cluster = FALSE)
 }
 
 ########################### Type 1 Error Function ####################################
@@ -114,4 +123,3 @@ type1_error <- function(P, n, distx, disty) {
   }
   type1 <- c("Permutation" = count_perm / P, "Asymptotic" = count_as / P)
 }
-
