@@ -16,10 +16,10 @@ beta <- function(size) {
 
 skew_normal <- function(size) {
   #Skew_normal Distribution
-  loc <- Rfast2::Runif(1, -50, 50)
+  loc   <- Rfast2::Runif(1, -50, 50)
   scale <- Rfast2::Runif(1, 1, 50)
-  a <- Rfast2::Runif(1, -20, 20)
-  x <- sn::rsn(size,
+  a     <- Rfast2::Runif(1, -20, 20)
+  x     <- sn::rsn(size,
                xi = loc,
                omega = scale,
                alpha = a)
@@ -92,15 +92,15 @@ mix_skew_t <- function(size) {
 mix_skew_t(50)
 
 ########################### Type 1 Error Function ####################################
-type1_error <- function(P, n, distx, disty) {
+type1_error  <- function(P, n, distx, disty) {
   count_perm <- 0
-  count_as <- 0
+  count_as   <- 0
   for (i in 1:P) {
-    x <- match.fun(distx)(n)
-    y <- match.fun(disty)(n)
-    pperm <- dcov::dcor.test(x, y, R = 500, type = 'U')$p.values
+    x       <- match.fun(distx)(n)
+    y       <- match.fun(disty)(n)
+    pperm   <- dcov::dcor.test(x, y, R = 500, type = 'U')$p.values
     stat_as <- n * dcov::dcor(x, y, type = "U") + 1
-    pas <- pchisq(stat_as, 1, lower.tail = FALSE)
+    pas     <- pchisq(stat_as, 1, lower.tail = FALSE)
     if (pperm < 0.05) {
       count_perm <- count_perm + 1
     }
