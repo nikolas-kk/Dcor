@@ -16,6 +16,11 @@ beta <- function(size) {
   return(x)
 }
 
+Vonmises <- function(size){
+  m <- Rfast2::Runif(1,0,360)
+  k <- Rfast2::Runif(1,1,10)
+  x <- Rfast::rvonmises(size,m,k,rads = FALSE)
+}
 
 
 ############################## For Generating Y ################################
