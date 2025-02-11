@@ -2,7 +2,7 @@ library(dcov)
 library(Rfast)
 library(Rfast2)
 library(microbenchmark)
-
+#----Συναρτήσεις--------------------
 beta <- function(size) {
   a <- Rfast2::Runif(1, 1, 50)
   b <- Rfast2::Runif(1, 1, 50)
@@ -21,15 +21,15 @@ mix_norm <- function(size) {
   v2 <- Rfast::Rnorm(size, mu2, v2)
   y <- p * v1 + q * v2 # sigma1 =v1 and sigma2=v2
 }
-microbenchmark(mix_norm(1000), 1000, unit = 'microseconds')
+
 
 type1_error <- function(P, n) {
-  count_perm <- 0
-  count_as <- 0
+  count_perm<-0
+  count_as<-0
   for (i in 1:P) {
     x <- beta(n)
     y <- mix_norm(n)
-    pperm <- dcor.test(x, y, R = 1000, type = 'U')$p.values
+    pperm <- dcov::dcor.test(x, y, R = 500, type = 'U')$p.values
     stat_as <- n * (dcov::dcor(x, y, type = "U")^2) + 1
     pas <- pchisq(stat_as, 1, lower.tail = FALSE)
     if (pperm < 0.05) {
@@ -42,5 +42,12 @@ type1_error <- function(P, n) {
   type1 <- c("Permutation" = count_perm / P, "Asymptotic" = count_as / P)
   return(type1)
 }
-type1_error(1000,10000)
-
+#--------------------------------------------------------------------------
+n50<-type1_error(1000,50)
+n100<-type1_error(1000,100)
+n200<-type1_error(1000,200)
+n500<-type1_error(1000,500)
+n1000<-type1_error(1000,1000)
+n2000<-type1_error(1000,2000)
+n5000<-type1_error(1000,5000)
+n10000<-type1_error(1000,10000)
