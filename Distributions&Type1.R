@@ -4,6 +4,7 @@
 #                   library(sn)
 #                   library(dcov)
 #                   library(LaplacesDemon)
+#                   library(mixsmsn)
 ########################### For Generating X ####################################
 
 beta <- function(size) {
