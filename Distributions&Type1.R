@@ -4,6 +4,7 @@
 #                   library(sn)
 #                   library(dcov)
 #                   library(LaplacesDemon)
+#                   library(mixsmsn)
 ########################### For Generating X ####################################
 
 beta <- function(size) {
@@ -36,68 +37,60 @@ Gamma <- function(size) {
   #so im setting the limit to 0.1
   shape <- Rfast2::Runif(1, 0.1, 10)
   scale <- Rfast2::Runif(1, 1, 10)
-  x <- rgamma(size, shape, scale)
+  x     <- rgamma(size, shape, scale)
 }
 
-cauchy <- function(size) {
-  loc <- Rfast2::Runif(1, -50, 50)
+cauchy  <- function(size) {
+  loc   <- Rfast2::Runif(1, -50, 50)
   scale <- Rfast2::Runif(1, 1, 50)
-  x <- rcauchy(size, loc, scale)
+  x     <- rcauchy(size, loc, scale)
 }
 ############################## For Generating Y ################################
 
 mix_norm <- function(size) {
   #Mixture of 2 normals
-  p1 <- Rfast2::Runif(1)
-  p<-c(p1,1-p1)
+  p1  <- Rfast2::Runif(1)
+  p   <- c(p1,1-p1)
   mu1 <- Rfast2::Runif(1, -50, 50)
-  v1 <- Rfast2::Runif(1, 0, 50)
+  v1  <- Rfast2::Runif(1, 0, 50)
   mu2 <- Rfast2::Runif(1, -50, 50)
-  v2 <- Rfast2::Runif(1, 0, 50)
-  m<-c(mu1,mu2)
-  s<-c(v1,v2)
-  y <- LaplacesDemon::rnormm(size,p,m,s)
+  v2  <- Rfast2::Runif(1, 0, 50)
+  m   <- c(mu1,mu2)
+  s   <- c(v1,v2)
+  y   <- LaplacesDemon::rnormm(size,p,m,s)
 }
 mix_norm3 <- function(size) {
   #Mixture of 3 normals
   mu1 <- Rfast2::Runif(1, -50, 50)
-  v1 <- Rfast2::Runif(1, 0, 50)
+  v1  <- Rfast2::Runif(1, 0, 50)
   mu2 <- Rfast2::Runif(1, -50, 50)
-  v2 <- Rfast2::Runif(1, 0, 50)
+  v2  <- Rfast2::Runif(1, 0, 50)
   mu3 <- Rfast2::Runif(1, -50, 50)
-  v3 <- Rfast2::Runif(1, 0, 50)
-  v1 <- Rfast::Rnorm(size, mu1, v1)
-  v2 <- Rfast::Rnorm(size, mu2, v2)
-  v3 <- Rfast::Rnorm(size, mu3, v3)
-  #rdirichlet generates 3 weights that sum to 1
-  y <- tcrossprod(matrix(c(v1, v2, v3), size), MCMCpack::rdirichlet(1, c(1, 1, 1)))
+  v3  <- Rfast2::Runif(1, 0, 50)
+  m   <- c(mu1,mu2,mu3)
+  s   <- c(v1,v2,v3)
+  p   <-  MCMCpack::rdirichlet(1, c(1, 1, 1))
+  LaplacesDemon::rnormm(size,p,m,s)
 }
 
 mix_skew_t <- function(size) {
-  p <- Rfast2::Runif(1)
-  q <- 1 - p
-  loc1 <- Rfast2::Runif(1, -50, 50)
+  p      <- Rfast2::Runif(1)
+  q      <- 1 - p
+  loc1   <- Rfast2::Runif(1, -50, 50)
+  loc2   <- Rfast2::Runif(1, -50, 50)
   scale1 <- Rfast2::Runif(1, 1, 50)
-  a1 <- Rfast2::Runif(1, -20, 20)
-  loc2 <- Rfast2::Runif(1, -50, 50)
   scale2 <- Rfast2::Runif(1, 1, 50)
-  a2 <- Rfast2::Runif(1, -20, 20)
-  v1 <- sn::rst(
-    size,
-    xi = loc1,
-    omega = scale1,
-    alpha = a1,
-    nu = 1
-  )#DF =1
-  v2 <- sn::rst(
-    size,
-    xi = loc2,
-    omega = scale2,
-    alpha = a2,
-    nu = 1
-  ) #DF = 1
-  y <- p * v1 + q * v2
+  a1     <- Rfast2::Runif(1, -20, 20)
+  a2     <- Rfast2::Runif(1, -20, 20)
+  p      <- c(p,q)
+  # mu = loc , sigma2 = scale , shape =  skew , nu = must be df
+  arg1   <- c(mu = loc1,sigma2 = scale1, shape  = a1 ,nu = 1) #nu = DF = 1
+  arg2   <- c(mu = loc2,sigma2 = scale2, shape  = a2 ,nu = 1)
+  arg    <- list(arg1,arg2)
+  mixsmsn::rmix(size,p,family = "Skew.t",arg, cluster = FALSE)
 }
+mix_skew_t(50)
+
 ########################### Type 1 Error Function ####################################
 type1_error <- function(P, n, distx, disty) {
   count_perm <- 0
@@ -117,3 +110,4 @@ type1_error <- function(P, n, distx, disty) {
   }
   type1 <- c("Permutation" = count_perm / P, "Asymptotic" = count_as / P)
 }
+
