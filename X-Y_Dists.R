@@ -89,19 +89,35 @@ mix_norm3 <- function(size){
   v2 <- Rfast::Rnorm(size, mu2, v2)
   v3 <- Rfast::Rnorm(size, mu3, v3)
   #### used the dirclet dist to generate weight for the mix of 3
+  # or a<- Rfast::Runif(1)
+  #    b <- Rfast::Runif(1,0,a)
+  #    c <- 1 - b - a
+  #    tcrossprod(matrix(c(v1,v2,v3),size),rdirichlet(1,c(1,1,1)))
   y <- tcrossprod(matrix(c(v1,v2,v3),size),rdirichlet(1,c(1,1,1)))
 }
 
-mix_norm_skew_t <- function(size) {
+a<- Rfast2::Runif(1)
+b <- Rfast2::Runif(1,0,a)
+c <- 1 - b - a
+matrix(c(a,b,c))
+
+sum(c(a,b,c))
+##For the mixture of 2 skewed t dist the packages needed to run the code are
+# library(Rfast)
+# library(Rfast2)
+# library(sn)
+
+mix_skew_t <- function(size) {
   p <- Rfast2::Runif(1)
   q <- 1 - p
   mu1 <- Rfast2::Runif(1, -50, 50)
   v1 <- Rfast2::Runif(1, 0, 50)
   mu2 <- Rfast2::Runif(1, -50, 50)
   v2 <- Rfast2::Runif(1, 0, 50)
-  v1 <- Rfast::Rnorm(size, mu1, v1,1)#DF =1 
-  v2 <- Rfast::Rnorm(size, mu2, v2,1) #DF
-  y <- p * v1 + q * v2 # sigma1 =v1 and sigma2=v2
+  #rst(n=1, mean=0, skew=1, alpha=0, nu=Inf)
+  v1 <- sn::rst(size,mu1, mu1, v1,1)#DF =1 
+  v2 <- sn::rst(size,mu1, mu2, v2,1) #DF = 1
+  y <- p * v1 + q * v2 
 }
 
 
