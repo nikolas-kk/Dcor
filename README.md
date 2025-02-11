@@ -20,7 +20,7 @@ dcor.test(x, y, R = 1000, type = "U")
 
 The asymptotic p-value is computed via
 
-stat <- n * dcor(x, y, type = "U")^2 + 1
+stat <- n * dcor(x, y, type = "U") + 1
 
 p-value <- pchisq(stat, 1, lower.tail = FALSE).
 
