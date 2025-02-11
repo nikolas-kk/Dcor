@@ -1,7 +1,7 @@
-#Required packages: Rfast
-#                   Rfast2
-#                   MCMCpack
-#                   sn
+#Required packages: library(Rfast)
+#                   library(Rfast2)
+#                   library(MCMCpack)
+#                   library(sn)
 
 
 ########################### For Generating X ####################################
