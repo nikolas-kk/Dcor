@@ -67,10 +67,15 @@ mix_norm3 <- function(size) {
   v2  <- Rfast2::Runif(1, 0, 50)
   mu3 <- Rfast2::Runif(1, -50, 50)
   v3  <- Rfast2::Runif(1, 0, 50)
-  m   <- c(mu1,mu2,mu3)
-  s   <- c(v1,v2,v3)
-  p   <-  MCMCpack::rdirichlet(1, c(1, 1, 1))
-  LaplacesDemon::rnormm(size,p,m,s)
+  m   <- c(mu1, mu2, mu3)
+  s   <- c(v1, v2, v3)
+  p<-sort(Rfast2::Runif(2))
+  p1<-p[1]
+  p2<-p[2]-p[1]
+  p3<-1-p[2]
+  p<-c(p1,p2,p3)
+  p<-p/sum(p)
+  y <- LaplacesDemon::rnormm(size, p, m, s)
 }
 
 mix_skew_t <- function(size) {
@@ -89,7 +94,6 @@ mix_skew_t <- function(size) {
   arg    <- list(arg1,arg2)
   mixsmsn::rmix(size,p,family = "Skew.t",arg, cluster = FALSE)
 }
-mix_skew_t(50)
 
 ########################### Type 1 Error Function ####################################
 type1_error <- function(P, n, distx, disty) {
