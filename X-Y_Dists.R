@@ -2,7 +2,12 @@
 ###These are the dist used in the examples 
 
 
-###for X
+########################### for Generating X ####################################
+
+
+##For the Beta  dist the packages needed to run the code are
+# library(Rfast)
+# library(Rfast2)
 
 beta <- function(size) {
   a <- Rfast2::Runif(1, 1, 50)
@@ -13,7 +18,13 @@ beta <- function(size) {
 
 
 
-### For Y
+############################## For Generating Y ################################
+
+
+##For the mixture of 2 dist the packages needed to run the code are
+# library(Rfast)
+# library(Rfast2)
+
 mix_norm <- function(size) {
   p <- Rfast2::Runif(1)
   q <- 1 - p
@@ -26,7 +37,10 @@ mix_norm <- function(size) {
   y <- p * v1 + q * v2 # sigma1 =v1 and sigma2=v2
 }
 
-
+##For the mixture of 3 dist the packages needed to run the code are
+# library(Rfast)
+# library(Rfast2)
+# library(MCMCpack)
 
 mix_norm3 <- function(size){
   mu1 <- Rfast2::Runif(1, -50, 50)
