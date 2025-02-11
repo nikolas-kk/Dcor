@@ -6,8 +6,6 @@
 
 ########################### For Generating X ####################################
 
-
-
 beta <- function(size) {
   #Beta Distribution
   a <- Rfast2::Runif(1, 1, 50)
@@ -29,7 +27,6 @@ Vonmises <- function(size){
   k <- Rfast2::Runif(1,1,10)
   x <- Rfast::rvonmises(size,m,k,rads = FALSE) #Check also rvmf
 }
-
 
 Gamma <- function(size){
   #the shape parameter as approaches to zero becomes heavily right skewed and it explodes
@@ -78,13 +75,15 @@ mix_norm3 <- function(size) {
 mix_skew_t <- function(size) {
   p <- Rfast2::Runif(1)
   q <- 1 - p
-  mu1 <- Rfast2::Runif(1, -50, 50)
-  v1 <- Rfast2::Runif(1, 0, 50)
-  mu2 <- Rfast2::Runif(1, -50, 50)
-  v2 <- Rfast2::Runif(1, 0, 50)
-  #rst(n=1, mean=0, skew=1, alpha=0, nu=Inf)
-  v1 <- sn::rst(size,mu1, mu1, v1,1)#DF =1 
-  v2 <- sn::rst(size,mu1, mu2, v2,1) #DF = 1
+  loc1 <- Rfast2::Runif(1, -50, 50)
+  scale1 <- Rfast2::Runif(1, 1, 50)
+  a1 <- Rfast2::Runif(1,-20, 20)
+  loc2 <- Rfast2::Runif(1, -50, 50)
+  scale2 <- Rfast2::Runif(1, 1, 50)
+  a2 <- Rfast2::Runif(1,-20, 20)
+  #rst(n=1, location=0, skew=1, alpha=0, nu=Inf)
+  v1 <- sn::rsn(size, xi = loc1, omega = scale1, alpha = a1, nu = 1)#DF =1 
+  v2 <- sn::rsn(size, xi = loc2, omega = scale2, alpha = a2, nu = 1) #DF = 1
   y <- p * v1 + q * v2 
 }
-
+sn::rst
