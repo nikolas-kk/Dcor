@@ -2,7 +2,7 @@
 #                   library(Rfast2)
 #                   library(MCMCpack)
 #                   library(sn)
-
+#                   library(dcov)
 
 ########################### For Generating X ####################################
 
@@ -17,24 +17,27 @@ skew_normal <- function(size) {
   #Skew_normal Distribution
   loc <- Rfast2::Runif(1, -50, 50)
   scale <- Rfast2::Runif(1, 1, 50)
-  a <- Rfast2::Runif(1,-20, 20)
-  x <- sn::rsn(size, xi = loc, omega = scale, alpha = a)
+  a <- Rfast2::Runif(1, -20, 20)
+  x <- sn::rsn(size,
+               xi = loc,
+               omega = scale,
+               alpha = a)
 }
 
 
-Vonmises <- function(size){
-  m <- Rfast2::Runif(1,0,360)
-  k <- Rfast2::Runif(1,1,10)
-  x <- Rfast::rvonmises(size,m,k,rads = FALSE) #Check also rvmf
+Vonmises <- function(size) {
+  m <- Rfast2::Runif(1, 0, 360)
+  k <- Rfast2::Runif(1, 1, 10)
+  x <- Rfast::rvonmises(size, m, k, rads = FALSE) #Check also rvmf
 }
 
-Gamma <- function(size){
+Gamma <- function(size) {
   #the shape parameter as approaches to zero becomes heavily right skewed and it explodes
-  #so im setting the limit to 0.1 
-  shape <- Rfast2::Runif(1,0.1,10)
+  #so im setting the limit to 0.1
+  shape <- Rfast2::Runif(1, 0.1, 10)
   #scale affects the variance here as the var becomes higher the var lowers and vice versa
-  scale <- Rfast2::Runif(1,1,10)
-  x <- rgamma(size,shape,scale)
+  scale <- Rfast2::Runif(1, 1, 10)
+  x <- rgamma(size, shape, scale)
 }
 
 cauchy <- function(size) {
@@ -77,13 +80,43 @@ mix_skew_t <- function(size) {
   q <- 1 - p
   loc1 <- Rfast2::Runif(1, -50, 50)
   scale1 <- Rfast2::Runif(1, 1, 50)
-  a1 <- Rfast2::Runif(1,-20, 20)
+  a1 <- Rfast2::Runif(1, -20, 20)
   loc2 <- Rfast2::Runif(1, -50, 50)
   scale2 <- Rfast2::Runif(1, 1, 50)
-  a2 <- Rfast2::Runif(1,-20, 20)
+  a2 <- Rfast2::Runif(1, -20, 20)
   #rst(n=1, location=0, skew=1, alpha=0, nu=Inf)
-  v1 <- sn::rsn(size, xi = loc1, omega = scale1, alpha = a1, nu = 1)#DF =1 
-  v2 <- sn::rsn(size, xi = loc2, omega = scale2, alpha = a2, nu = 1) #DF = 1
-  y <- p * v1 + q * v2 
+  v1 <- sn::rst(
+    size,
+    xi = loc1,
+    omega = scale1,
+    alpha = a1,
+    nu = 1
+  )#DF =1
+  v2 <- sn::rst(
+    size,
+    xi = loc2,
+    omega = scale2,
+    alpha = a2,
+    nu = 1
+  ) #DF = 1
+  y <- p * v1 + q * v2
 }
-sn::rst
+########################### Type 1 Error Function ####################################
+type1_error <- function(P, n, distx, disty) {
+  count_perm <- 0
+  count_as <- 0
+  for (i in 1:P) {
+    x <- match.fun(distx)(n)
+    y <- match.fun(disty)(n)
+    pperm <- dcov::dcor.test(x, y, R = 500, type = 'U')$p.values
+    stat_as <- n * (dcov::dcor(x, y, type = "U")^2) + 1
+    pas <- pchisq(stat_as, 1, lower.tail = FALSE)
+    if (pperm < 0.05) {
+      count_perm <- count_perm + 1
+    }
+    if (pas < 0.05) {
+      count_as <- count_as + 1
+    }
+  }
+  type1 <- c("Permutation" = count_perm / P, "Asymptotic" = count_as / P)
+}
