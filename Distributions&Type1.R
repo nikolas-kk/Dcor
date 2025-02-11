@@ -35,7 +35,6 @@ Gamma <- function(size) {
   #the shape parameter as approaches to zero becomes heavily right skewed and it explodes
   #so im setting the limit to 0.1
   shape <- Rfast2::Runif(1, 0.1, 10)
-  #scale affects the variance here as the var becomes higher the var lowers and vice versa
   scale <- Rfast2::Runif(1, 1, 10)
   x <- rgamma(size, shape, scale)
 }
@@ -84,7 +83,6 @@ mix_skew_t <- function(size) {
   loc2 <- Rfast2::Runif(1, -50, 50)
   scale2 <- Rfast2::Runif(1, 1, 50)
   a2 <- Rfast2::Runif(1, -20, 20)
-  #rst(n=1, location=0, skew=1, alpha=0, nu=Inf)
   v1 <- sn::rst(
     size,
     xi = loc1,
