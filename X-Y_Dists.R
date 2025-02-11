@@ -16,14 +16,22 @@ beta <- function(size) {
   return(x)
 }
 
+##For the Von Mises dist the packages needed to run the code are
+# library(Rfast)
+# library(Rfast2)
+
+
 Vonmises <- function(size){
   m <- Rfast2::Runif(1,0,360)
   k <- Rfast2::Runif(1,1,10)
   x <- Rfast::rvonmises(size,m,k,rads = FALSE)
 }
 
-plot(density(rgamma(200,0.5,1)))
-rgamma()
+##For the Gamma dist the packages needed to run the code are
+# library(Rfast)
+# library(Rfast2)
+
+
 Gamma <- function(size){
   #the shape parameter as approaches to zero becomes heavily right skewed and it explodes
   #so im setting the limit to 0.1 
@@ -72,10 +80,6 @@ mix_norm3 <- function(size){
   y <- tcrossprod(matrix(c(v1,v2,v3),size),rdirichlet(1,c(1,1,1)))
 }
 
-Rfast::rmvt()
-
-rgamma()
-rgamma(200, 3, 1)
 
 
 
