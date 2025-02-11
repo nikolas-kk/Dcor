@@ -107,7 +107,7 @@ type1_error <- function(P, n, distx, disty) {
     x <- match.fun(distx)(n)
     y <- match.fun(disty)(n)
     pperm <- dcov::dcor.test(x, y, R = 500, type = 'U')$p.values
-    stat_as <- n * (dcov::dcor(x, y, type = "U")^2) + 1
+    stat_as <- n * dcov::dcor(x, y, type = "U") + 1
     pas <- pchisq(stat_as, 1, lower.tail = FALSE)
     if (pperm < 0.05) {
       count_perm <- count_perm + 1
