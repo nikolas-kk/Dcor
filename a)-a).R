@@ -2,6 +2,8 @@
 
 library(dcov)
 library(ggplot2)
+library(Rfast2)
+library(Rfast)
 #auto einai ena testaki
 
 
@@ -48,26 +50,4 @@ CocktailNorm <- function(n,p=0.5){
   return(x)
 }
 
-aa <- CocktailNorm(100)
-df <- data.frame(aa)
 
-ggplot(df, aes(x = aa)) +
-  geom_density()
-
-d <-replicate(1000,CocktailNorm(500,runif(1,0,1)))
-y <-replicate(1000,rnorm(500,runif(1,1,10),runif(1,1,10)))
-
-pperm <- dcor.test(d, y, R = 1000, type = 'U')$p.values
-dcor.te
-stat_as <- 50 * dcor(x, y, type = "U")^2 + 1
-pas <- pchisq(stat_as, 1, lower.tail = FALSE)
-if (pperm < 0.05) {
-  count_perm <- count_perm + 1
-}
-if (pas < 0.05) {
-  count_as <- count_as + 1
-}
-}
-type1 <- c("Pemutation" = count_perm / P, "Asymptotic" = count_as / P)
-return(type1)
-}
