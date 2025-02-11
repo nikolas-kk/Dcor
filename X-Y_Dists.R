@@ -22,6 +22,17 @@ Vonmises <- function(size){
   x <- Rfast::rvonmises(size,m,k,rads = FALSE)
 }
 
+plot(density(rgamma(200,0.5,1)))
+rgamma()
+Gamma <- function(size){
+  #the shape parameter as approaches to zero becomes heavily right skewed and it explodes
+  #so im setting the limit to 0.1 
+  shape <- Rfast2::Runif(1,0.1,10)
+  #scale affects the variance here as the var becomes higher the var lowers and vice versa
+  scale <- Rfast2::Runif(1,1,10)
+  x <- rgamma(size,shape,scale)
+}
+
 
 ############################## For Generating Y ################################
 
@@ -60,6 +71,11 @@ mix_norm3 <- function(size){
   #### used the dirclet dist to generate weight for the mix of 3
   y <- tcrossprod(matrix(c(v1,v2,v3),size),rdirichlet(1,c(1,1,1)))
 }
+
+Rfast::rmvt()
+
+rgamma()
+rgamma(200, 3, 1)
 
 
 
