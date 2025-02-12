@@ -19,9 +19,9 @@ skew_normal <- function(size) {
   scale <- Rfast2::Runif(1, 1, 50)
   a     <- Rfast2::Runif(1, -20, 20)
   x     <- sn::rsn(size,
-               xi = loc,
-               omega = scale,
-               alpha = a)
+                   xi = loc,
+                   omega = scale,
+                   alpha = a)
 }
 
 
@@ -124,6 +124,7 @@ type1_error  <- function(P, n, distx, disty) {
   type1 <- c("Permutation" = count_perm / P, "Asymptotic" = count_as / P)
 }
 
+fffffffff
 
 
 
