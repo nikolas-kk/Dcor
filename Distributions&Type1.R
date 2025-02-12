@@ -26,9 +26,9 @@ skew_normal <- function(size) {
 
 
 Vonmises <- function(size) {
-  m <- Rfast2::Runif(1, 0, 360)
+  m <- Rfast2::Runif(1, 0, 2*pi)
   k <- Rfast2::Runif(1, 1, 10)
-  x <- Rfast::rvonmises(size, m, k, rads = FALSE) #Check also rvmf
+  x <- Rfast::rvonmises(size, m, k, rads = TRUE) #Check also rvmf
 }
 
 Gamma <- function(size) {
