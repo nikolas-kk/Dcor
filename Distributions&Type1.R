@@ -123,3 +123,7 @@ type1_error  <- function(P, n, distx, disty) {
   }
   type1 <- c("Permutation" = count_perm / P, "Asymptotic" = count_as / P)
 }
+
+
+
+
