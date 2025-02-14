@@ -12,7 +12,7 @@ final_table_latex_code <-#latex packages tabu,multirow,alphabeta
 \begin{tabu} to \linewidth {l|>{\raggedright}p{0.8cm}>{\raggedleft}p{0.8cm}>{\raggedleft}p{0.8cm}>{\raggedleft}p{0.8cm}>{\raggedleft}p{0.8cm}>{\raggedleft}p{0.8cm}>{\raggedleft}p{0.8cm}>{\raggedleft}p{0.8cm}>{\raggedleft}p{0.75cm}}
 \toprule
 \toprule
-\textbf{Distribution}& \textbf{N} & \textbf{50} & \textbf{100} & \textbf{200} & \textbf{500} & \textbf{1000} & \textbf{2000} & \textbf{5000} & \textbf{10000}\\
+\textbf{Distributions}& \textbf{N} & \textbf{50} & \textbf{100} & \textbf{200} & \textbf{500} & \textbf{1000} & \textbf{2000} & \textbf{5000} & \textbf{10000}\\
 \midrule
 \midrule
 \multirow{2}{*}{\textbf{Be(a, b) - M_2N}} & P & 0.049 & 0.060 & 0.045 & 0.039 & 0.051 & 0.054 & 0.053 & 0.045\\
