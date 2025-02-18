@@ -133,19 +133,21 @@ z2 <- function(n) { #mix laplace - x^2
 }
 
 ########################### Type 1 Error Function for 1 z ####################################
-type1_error_partial  <- function(P, n, distx, disty,nz) {
+type1_error_partial  <- function(P, n, distx, disty, nz) {
   count_perm <- 0
   count_as   <- 0
+  dist_x <- match.fun(distx)
+  dist_y <- match.fun(disty)
   for (i in 1:P) {
-    if(nz==1){
-      z<-z1(n)
-    }else{
-      z<-cbind(z1(n),z2(n))
+    if (nz == 1) {
+      z <- z1(n)
+    } else{
+      z <- cbind(z1(n), z2(n))
     }
-    x       <- match.fun(distx)(n)
-    y       <- match.fun(disty)(n)
-    pperm   <- dcov::pdcor.test(x, y,z , R = 500, type = 'U')$p.values
-    stat_as <- n * dcov::pdcor(x, y,z, type = "U") + 1
+    x       <- dist_x(n)
+    y       <- dist_y(n)
+    pperm   <- dcov::pdcor.test(x, y, z , R = 500, type = 'U')$p.values
+    stat_as <- n * dcov::pdcor(x, y, z, type = "U") + 1
     pas     <- pchisq(stat_as, 1, lower.tail = FALSE)
     if (pperm < 0.05) {
       count_perm <- count_perm + 1
@@ -156,4 +158,4 @@ type1_error_partial  <- function(P, n, distx, disty,nz) {
   }
   type1 <- c("Permutation" = count_perm / P, "Asymptotic" = count_as / P)
 }
-
+print(type1_error_partial(1000,100,'beta','mix_norm',nz=2))
