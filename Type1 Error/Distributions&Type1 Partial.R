@@ -103,26 +103,6 @@ mix_skew_t <- function(size) {
   arg    <- list(arg1, arg2)
   mixsmsn::rmix(size, p, family = "Skew.t", arg, cluster = FALSE)
 }
-
-########################### Type 1 Error Function ####################################
-type1_error  <- function(P, n, distx, disty) {
-  count_perm <- 0
-  count_as   <- 0
-  for (i in 1:P) {
-    x       <- match.fun(distx)(n)
-    y       <- match.fun(disty)(n)
-    pperm   <- dcov::dcor.test(x, y, R = 500, type = 'U')$p.values
-    stat_as <- n * dcov::dcor(x, y, type = "U") + 1
-    pas     <- pchisq(stat_as, 1, lower.tail = FALSE)
-    if (pperm < 0.05) {
-      count_perm <- count_perm + 1
-    }
-    if (pas < 0.05) {
-      count_as <- count_as + 1
-    }
-  }
-  type1 <- c("Permutation" = count_perm / P, "Asymptotic" = count_as / P)
-}
 #-----------z for the Partial Correlation------------
 z1 <- function(n) { #mix exp - weibull
   z <- numeric(n)
@@ -151,4 +131,29 @@ z2 <- function(n) { #mix laplace - x^2
   z[laplace_ind] <- rlaplace(sum(laplace_ind), loc1, scale1)
   z
 }
-z2(100)
+
+########################### Type 1 Error Function for 1 z ####################################
+type1_error_partial  <- function(P, n, distx, disty,nz) {
+  count_perm <- 0
+  count_as   <- 0
+  for (i in 1:P) {
+    if(nz==1){
+      z<-z1(n)
+    }else{
+      z<-cbind(z1(n),z2(n))
+    }
+    x       <- match.fun(distx)(n)
+    y       <- match.fun(disty)(n)
+    pperm   <- dcov::pdcor.test(x, y,z , R = 500, type = 'U')$p.values
+    stat_as <- n * dcov::pdcor(x, y,z, type = "U") + 1
+    pas     <- pchisq(stat_as, 1, lower.tail = FALSE)
+    if (pperm < 0.05) {
+      count_perm <- count_perm + 1
+    }
+    if (pas < 0.05) {
+      count_as <- count_as + 1
+    }
+  }
+  type1 <- c("Permutation" = count_perm / P, "Asymptotic" = count_as / P)
+}
+
