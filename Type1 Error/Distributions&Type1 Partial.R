@@ -128,7 +128,7 @@ z2 <- function(n) { #mix laplace - x^2
   x_2_ind <- q <= p
   laplace_ind <- !x_2_ind
   z[x_2_ind] <- rchisq(sum(x_2_ind), df1)
-  z[laplace_ind] <- rlaplace(sum(laplace_ind), loc1, scale1)
+  z[laplace_ind] <- diagL1::rlaplace(sum(laplace_ind), loc1, scale1)
   z
 }
 
