@@ -158,4 +158,3 @@ type1_error_partial  <- function(P, n, distx, disty, nz) {
   }
   type1 <- c("Permutation" = count_perm / P, "Asymptotic" = count_as / P)
 }
-print(type1_error_partial(1000,100,'beta','mix_norm',nz=2))
