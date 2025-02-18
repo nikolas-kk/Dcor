@@ -138,8 +138,9 @@ type1_error_partial  <- function(P, n, distx, disty, nz) {
   count_as   <- 0
   dist_x <- match.fun(distx)
   dist_y <- match.fun(disty)
+  cond<-nz==1
   for (i in 1:P) {
-    if (nz == 1) {
+    if (cond) {
       z <- z1(n)
     } else{
       z <- cbind(z1(n), z2(n))
@@ -158,3 +159,5 @@ type1_error_partial  <- function(P, n, distx, disty, nz) {
   }
   type1 <- c("Permutation" = count_perm / P, "Asymptotic" = count_as / P)
 }
+
+
