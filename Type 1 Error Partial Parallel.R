@@ -7,7 +7,7 @@ library(Rfast2)
 library(LaplacesDemon)
 library(mixsmsn)
 
-ncores <- detectCores() - 6
+ncores <- detectCores() - 7
 cl <- makeCluster(ncores)
 registerDoParallel(cl)
 
@@ -30,6 +30,7 @@ type1_error_parallel <- function(P, n, distx, disty, nz) {
                        pperm   <- dcov::pdcor.test(x, y, z, R = 500, type = 'U')$p.values
                        stat_as <- n * dcov::pdcor(x, y, z, type = "U") + 1
                        pas     <- pchisq(stat_as, 1, lower.tail = FALSE)
+                       gc()
                        
                        c(Permutation = as.numeric(pperm < 0.05), Asymptotic = as.numeric(pas < 0.05))
                      }
