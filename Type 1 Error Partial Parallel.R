@@ -1,5 +1,5 @@
 source('C:/Users/Nikolas/Desktop/Arxeia_R/Dcor/Type1 Error/Distributions&Type1_Partial.R')
-source('C:/Users/Nikolas/Desktop/pdcor2.R')
+source('C:/Users/Nikolas/Desktop/Arxeia_R/Dcor/Pdcor1zfast.R')
 library(parallel)
 library(doParallel)
 library(foreach)
@@ -18,7 +18,7 @@ type1_error_parallel <- function(P, n, distx, disty, nz) {
   dist_y <- match.fun(disty)
   
   results <- foreach(i = 1:P, .combine = rbind, .packages = c("dcov", "Rfast2", "LaplacesDemon", "mixsmsn"), 
-                     .export = c("z1", "z2","pdcor.test2",'pdcor2')) %dopar% {
+                     .export = c("z1", "z2","pdcor.test3",'pdcor2')) %dopar% {
                        if (nz == 1) {
                          z <- z1(n)
                        } else {
@@ -48,7 +48,7 @@ results <- list()
 for (disty in distributions) {
   for (n in n_values) {
     key <- paste0("n", n, "_", disty)
-    results[[key]] <- type1_error_parallel(1000, n, distx, disty, nz = 2)
+    results[[key]] <- type1_error_parallel(1000, n, distx, disty, nz = 1)
   }
 }
 

@@ -54,3 +54,19 @@ pdcor.test4 <- function(x, y, z, R = 500) {
   pstat <- up / down
   (sum(pstat > stat) + 1) / (R + 1)
 }
+
+
+pdcor2 <- function (x, y, z) {
+  if (is.matrix(z)) {
+    a1 <- dcov::dcor(x, y, type = "U")
+    a2 <- Rfast::dcor(x, z)$dcor
+    a3 <- Rfast::dcor(y, z)$dcor
+  } else {
+    a1 <- dcov::dcor(x, y, type = "U")
+    a2 <- dcov::dcor(x, z, type = "U")
+    a3 <- dcov::dcor(y, z, type = "U")
+  }
+  up <- a1 - a2 * a3
+  down <- sqrt(1 - a2^2) * sqrt(1 - a3^2)
+  up / down
+}
