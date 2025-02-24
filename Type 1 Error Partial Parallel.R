@@ -39,7 +39,7 @@ type1_error_parallel <- function(P, n, distx, disty, nz) {
   colMeans(results)
 }
 
-n_values <- c(10000)
+n_values <- c(50,100,200,500,1000,2000,5000,10000)
 distx <- "beta"
 distributions <- c("mix_norm", "mix_norm3", "mix_skew_t")
 
