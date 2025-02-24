@@ -28,7 +28,7 @@ type1_error_parallel <- function(P, n, distx, disty, nz) {
                        x <- dist_x(n)
                        y <- dist_y(n)
                        
-                       pperm   <-pdcor.test2(x, y, z, R = 500)$
+                       pperm   <-pdcor.test3(x, y, z, R = 500)
                        stat_as <- n * pdcor2(x,y,z) + 1
                        pas     <- pchisq(stat_as, 1, lower.tail = FALSE)
                        gc()
