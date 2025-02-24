@@ -40,7 +40,7 @@ type1_error_parallel <- function(P, n, distx, disty, nz) {
 }
 
 n_values <- c(50,100,200,500,1000,2000,5000,10000)
-distx <- "beta"
+distx <- "cauchy"
 distributions <- c("mix_norm", "mix_norm3", "mix_skew_t")
 
 results <- list()
@@ -54,4 +54,4 @@ for (disty in distributions) {
 
 stopCluster(cl)
 
-save(results, file = "x~Beta_Partial_1z_parallel.RData")
+save(results, file = "x~cauchy _Partial_1z_parallel.RData")
