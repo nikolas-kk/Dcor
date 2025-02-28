@@ -4,7 +4,7 @@ library(parallel)
 
 #fix the function and use mclapply for linux
 P <- 1000
-power_test <- function(n,distx,disty,nz=1){
+type1error_testpartial <- function(n,distx,disty,nz=1){
   dist_x <- match.fun(distx)
   dist_y <- match.fun(disty)
   
@@ -32,7 +32,7 @@ power_test <- function(n,distx,disty,nz=1){
   c(Permutation = as.numeric(pperm < 0.05), Asymptotic = as.numeric(pas < 0.05))
 }
 results <- mclapply(1:P, function(i) {
-  power_test(n, distx, disty, nz)
+  type1error_testpartial(n, distx, disty, nz)
 }, mc.cores = detectCores() - 7)
 results_matrix <-do.call(rbind,results)
 results_matrix
