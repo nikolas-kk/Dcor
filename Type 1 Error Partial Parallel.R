@@ -1,57 +1,35 @@
-source('C:/Users/Nikolas/Desktop/Arxeia_R/Dcor/Type1 Error/Distributions&Type1_Partial.R')
-source('C:/Users/Nikolas/Desktop/Arxeia_R/Dcor/Pdcor1zfast.R')
 library(parallel)
-library(doParallel)
-library(foreach)
-library(dcov)
-library(Rfast2)
-library(LaplacesDemon)
-library(mixsmsn)
-
-ncores <- detectCores() - 8
-cl <- makeCluster(ncores)
-registerDoParallel(cl)
-
-
-type1_error_parallel <- function(P, n, distx, disty, nz) {
-  dist_x <- match.fun(distx)
-  dist_y <- match.fun(disty)
+source("~/Desktop/R Files/Dcor/Type1 Error/Dcor Type 1/Distributions&Type1_Partial.R")
+type1_partial <- function(dist_x, dist_y, n) {
+  distx <- match.fun(dist_x)
+  disty <- match.fun(dist_y)
+  z <- z1(n)
+  x <- distx(n) + z
+  y <- disty(n) + z
   
-  results <- foreach(i = 1:P, .combine = rbind, .packages = c("dcov", "Rfast2", "LaplacesDemon", "mixsmsn"), 
-                     .export = c("z1", "z2","pdcor.test3",'pdcor2')) %dopar% {
-                       if (nz == 1) {
-                         z <- z1(n)
-                       } else {
-                         z <- cbind(z1(n), z2(n))
-                       }
-                       
-                       x <- dist_x(n)
-                       y <- dist_y(n)
-                       
-                       pperm   <-pdcor.test3(x, y, z, R = 500)
-                       stat_as <- n * pdcor2(x,y,z) + 1
-                       pas     <- pchisq(stat_as, 1, lower.tail = FALSE)
-                       gc()
-                       
-                       c(Permutation = as.numeric(pperm < 0.05), Asymptotic = as.numeric(pas < 0.05))
-                     }
+  pas <- corrfuns::partialcor(cor(cbind(x, y, z)), 1, 2, 3, n)[2]
+  pperm <- pdcor::pdcor.test(x, y, z)[-1]
   
-  colMeans(results)
+  c(as.numeric(pperm<0.05),as.numeric(pas<0.05))
 }
 
-n_values <- c(50,100,200,500,1000,2000,5000,10000)
-distx <- "cauchy"
-distributions <- c("mix_norm", "mix_norm3", "mix_skew_t")
+xdist <- c('beta',"skew_normal",'Vonmises', "Gamma", 'cauchy')
+ydist <- c('mix_norm', 'mix_norm3', 'mix_skew_t')
+sizes <- c(50, 100, 200, 500, 1000, 2000, 5000, 10000)
 
-results <- list()
 
-for (disty in distributions) {
-  for (n in n_values) {
-    key <- paste0("n", n, "_", disty)
-    results[[key]] <- type1_error_parallel(1000, n, distx, disty, nz = 1)
+for (k in xdist) {
+  results <- c()
+  for (j in ydist) {
+    for (n in sizes) {
+      value <- mclapply(1:1000,function(i){
+        type1_partial(k,j,n)
+      },mc.cores=9)
+      value <- Rfast::colmeans(do.call(rbind, value))
+      title<-paste0("n",n,"_",j)
+      names(value) <- paste0(title, c("_perm", "_as","_pear"))
+      results <- c(results, value)
+    }
   }
+  save(results,file=paste0("x~",k,".RData"))
 }
-
-stopCluster(cl)
-
-save(results, file = "x~cauchy _Partial_1z_parallel.RData")
