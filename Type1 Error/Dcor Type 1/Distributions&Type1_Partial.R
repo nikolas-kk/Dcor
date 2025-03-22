@@ -29,6 +29,7 @@ Vonmises <- function(size) {
   m <- Rfast2::Runif(1, 0, 2*pi)
   k <- Rfast2::Runif(1, 1, 10)
   x <- Rfast::rvonmises(size, m, k, rads = TRUE) #Check also rvmf
+  as.vector(x)
 }
 
 Gamma <- function(size) {
