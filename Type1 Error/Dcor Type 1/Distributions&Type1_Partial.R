@@ -21,7 +21,7 @@ skew_normal <- function(size) {
   x     <- sn::rsn(size,
                    xi = loc,
                    omega = scale,
-                   alpha = a)
+                   alpha = a)[1:n]
 }
 
 
