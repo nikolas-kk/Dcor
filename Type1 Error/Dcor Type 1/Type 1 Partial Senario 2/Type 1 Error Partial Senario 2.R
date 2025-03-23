@@ -13,7 +13,7 @@ type1_partial <- function(dist_x, dist_y, n) {
   c(as.numeric(pperm<0.05),as.numeric(pas<0.05))
 }
 
-xdist <- c('Vonmises', "Gamma", 'cauchy')
+xdist <- c("beta","skew_normal",'Vonmises', "Gamma", 'cauchy')
 ydist <- c('mix_norm', 'mix_norm3', 'mix_skew_t')
 sizes <- c(50, 100, 200, 500, 1000, 2000, 5000, 10000)
 
