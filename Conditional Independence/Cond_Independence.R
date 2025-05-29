@@ -11,21 +11,30 @@ cond_ind <- function(dist_z, n) {
   c(as.numeric(pperm < 0.05), as.numeric(pas < 0.05))
 }
 
-zdist <- c("beta","skew_normal",'Vonmises', "Gamma", 'cauchy','mix_norm', 'mix_norm3', 'mix_skew_t')
+zdist <- c(
+  "beta",
+  "skew_normal",
+  'Vonmises',
+  "Gamma",
+  'cauchy',
+  'mix_norm',
+  'mix_norm3',
+  'mix_skew_t'
+)
 sizes <- c(50, 100, 200, 500, 1000, 2000, 5000, 10000)
 
 for (dist in zdist) {
   results <- c()
   for (n in sizes) {
-    value <-mclapply(1:1000, function(i){
+    value <- mclapply(1:1000, function(i) {
       cond_ind(dist, n)
     }, mc.cores = 11)
     value <- Rfast::colmeans(do.call(rbind, value))
     title <- paste0("n", n, "_", dist)
-    names(value) <- paste0(title, c("_perm", "_as","_pear"))
+    names(value) <- paste0(title, c("_perm", "_as", "_pear"))
     results <- c(results, value)
   }
-  save (results, file = paste0('z~',dist,".RData"))
+  save (results, file = paste0('z~', dist, ".RData"))
 }
 
 cond_ind('mix_skew_t', 100)
