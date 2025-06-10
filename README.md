@@ -1,1 +1,1 @@
-This repository contains the code used to construct the tables in the paper Independence testing using the (partial) distance correlation by Kontemeniotis N., Vargiakis R. and Tsagris M.
+This repository contains the code used to construct the tables in the paper "Independence testing using the (partial) distance correlation" by Kontemeniotis N., Vargiakis R. and Tsagris M.
